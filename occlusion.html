@@ -364,8 +364,16 @@
         // Bounding box geometry
         var GRID_DIM = 5; // default
         var spheres = [];
-        
+        for (let s of spheres) {
+            if (s?.query) gl.deleteQuery(s.query);
+        }
+
         function generateSpheres(gridDim) {
+            // Cleanup old queries
+            for (let s of spheres) {
+                if (s?.query) gl.deleteQuery(s.query);
+            }
+        
             GRID_DIM = gridDim;
             var gridOffset = GRID_DIM / 2 - 0.5;
             var numSpheres = GRID_DIM * GRID_DIM;
@@ -530,7 +538,8 @@
                     // Update transforms
                     sphere.rotate[1] += 0.003;
 
-                    utils.xformMatrix(sphere.modelMatrix, sphere.translate, null, sphere.scale);
+                    utils.xformMatrix(sphere.modelMatrix, sphere.translate);
+
                     mat4.fromYRotation(rotationMatrix, sphere.rotate[1]);
                     mat4.multiply(sphere.modelMatrix, rotationMatrix, sphere.modelMatrix);
                     
@@ -606,16 +615,21 @@
                 }
 
                 occludedSpheresElement.innerHTML = occludedSpheres;
+            
 
-                requestAnimationFrame(draw);
+             
             }
+            generateSpheres(parseInt(document.getElementById("grid-slider").value));
             document.getElementById("grid-slider").addEventListener("input", function () {
-                var gridSize = parseInt(this.value);
-                document.getElementById("grid-size-display").textContent = gridSize;
-                generateSpheres(gridSize);
-            });
+            var gridSize = parseInt(this.value);
+            document.getElementById("grid-size-display").textContent = gridSize;
+            generateSpheres(gridSize);
+        });
+        
+  
+        
+        requestAnimationFrame(draw);
 
-            requestAnimationFrame(draw);
             
         }
 
