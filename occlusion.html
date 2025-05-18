@@ -522,7 +522,8 @@
                 gl.depthMask(true);
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-                for (i = 0; i < NUM_SPHERES; ++i) {
+                for (i = 0; i < spheres.length; ++i) {
+
                     sphere = spheres[i];
                     boundingBox = sphere.boundingBox;
 
@@ -591,7 +592,8 @@
                     gl.clearColor(0.3, 0.3, 0.3, 1);
                     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                     gl.useProgram(hudProgram);
-                    for (i = 0; i < NUM_SPHERES; ++i) {
+                    for (i = 0; i < spheres.length; ++i) {
+
                         sphere = spheres[i];
                         if (!sphere.occluded) {
                             gl.bindVertexArray(sphere.vertexArray);
