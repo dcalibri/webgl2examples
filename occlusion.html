@@ -57,7 +57,11 @@
         Spheres: <span id="num-spheres"></span><br>
         Culled spheres: <span id="num-invisible-spheres"></span><br>
         Enable occlusion culling: <input id="occlusion-toggle" type="checkbox" checked><br>
-        Top-down HUD: <input id="hud-toggle" type="checkbox" checked> 
+        
+        Top-down HUD: <input id="hud-toggle" type="checkbox" checked> <br>
+        Grid Size (Y × Y): <input type="range" id="grid-slider" min="1" max="10" value="5">
+<span id="grid-size-display">5</span>
+
     </div>
     <script type="x-shader/vs" id="vertex-draw">
         #version 300 es
@@ -358,50 +362,42 @@
         gl.bindVertexArray(null);
 
         // Bounding box geometry
-        sphere.boundingBox = utils.computeBoundingBox(sphere.positions, {geo: true});
-
-        var boundingBoxArray = gl.createVertexArray();
-        gl.bindVertexArray(boundingBoxArray);
-
-        positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, sphere.boundingBox.geo.positions, gl.STATIC_DRAW);
-        gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(0);
-
-        gl.bindVertexArray(null);
-
-        // Object definitions
-        var GRID_DIM = 10;
-        var GRID_OFFSET = GRID_DIM / 2 - 0.5;
-        var NUM_SPHERES = GRID_DIM * GRID_DIM;
-        var spheres = new Array(NUM_SPHERES);
-
-        for (var i = 0; i < NUM_SPHERES; ++i) {
-            var x = Math.floor(i / GRID_DIM) - GRID_OFFSET;
-            var z = i % GRID_DIM - GRID_OFFSET;
-
-            spheres[i] = {
-                rotate: [0, 0, 0], // Will be used for global rotation
-                translate: [x, 0, z],
-                modelMatrix: mat4.create(),
-
-                vertexArray: sphereArray,
-                numElements: sphere.indices.length,
-
-                boundingBox: sphere.boundingBox,
-                boundingBoxVertexArray: boundingBoxArray,
-                boundingBoxNumVertices: sphere.boundingBox.geo.positions.length / 3,
-
-                query: gl.createQuery(),
-                queryInProgress: false,
-                occluded: false
-            };
-            
-            utils.xformMatrix(spheres[i].modelMatrix, spheres[i].translate);
+        var GRID_DIM = 5; // default
+        var spheres = [];
+        
+        function generateSpheres(gridDim) {
+            GRID_DIM = gridDim;
+            var gridOffset = GRID_DIM / 2 - 0.5;
+            var numSpheres = GRID_DIM * GRID_DIM;
+            spheres = new Array(numSpheres);
+        
+            for (var i = 0; i < numSpheres; ++i) {
+                var x = Math.floor(i / GRID_DIM) - gridOffset;
+                var z = i % GRID_DIM - gridOffset;
+        
+                spheres[i] = {
+                    rotate: [0, 0, 0],
+                    translate: [x, 0, z],
+                    modelMatrix: mat4.create(),
+        
+                    vertexArray: sphereArray,
+                    numElements: sphere.indices.length,
+        
+                    boundingBox: sphere.boundingBox,
+                    boundingBoxVertexArray: boundingBoxArray,
+                    boundingBoxNumVertices: sphere.boundingBox.geo.positions.length / 3,
+        
+                    query: gl.createQuery(),
+                    queryInProgress: false,
+                    occluded: false
+                };
+        
+                utils.xformMatrix(spheres[i].modelMatrix, spheres[i].translate);
+            }
+        
+            sphereCountElement.innerHTML = spheres.length;
         }
-
-        sphereCountElement.innerHTML = spheres.length;
+        
 
         //////////////////////////
         // UNIFORM DATA
@@ -611,6 +607,11 @@
 
                 requestAnimationFrame(draw);
             }
+            document.getElementById("grid-slider").addEventListener("input", function () {
+                var gridSize = parseInt(this.value);
+                document.getElementById("grid-size-display").textContent = gridSize;
+                generateSpheres(gridSize);
+            });
 
             requestAnimationFrame(draw);
             
