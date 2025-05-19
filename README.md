@@ -12,8 +12,8 @@ Currently include:
 - [Weighted, Blended Order-independent Transparency](https://tsherif.github.io/webgl2examples/oit.html) (vertex arrays, uniform buffers, immutable textures, multiple render targets, float textures, texelFetch, hardware instancing, EXT_color_buffer_float)
 - [Order-independent Transparency using Dual Depth Peeling](https://tsherif.github.io/webgl2examples/oit-dual-depth-peeling.html) (vertex arrays, uniform buffers, immutable textures, multiple render targets, float textures, texelFetch, hardware instancing, EXT_color_buffer_float)
 - [Screen Space Ambient Occlusion](https://tsherif.github.io/webgl2examples/ssao.html) (vertex arrays, uniform buffers, immutable textures, multiple render targets, float textures, texelFetch, hardware instancing, EXT_color_buffer_float)
-- [Occlusion Culling](https://dcalibri.github.io/webgl2examples/occlusion.html) (vertex arrays, uniform buffers, immutable textures, occlusion query)
-- [Occlusion Culling](https://dcalibri.github.io/webgl2examples/occlusion-heavy.html) (vertex arrays, uniform buffers, immutable textures, occlusion query)
+- [Occlusion Culling](https://dcalibri.github.io/occlusion.html) (vertex arrays, uniform buffers, immutable textures, occlusion query)
+- [Occlusion Culling](https://dcalibri.github.io/occlusion-heavy.html) (vertex arrays, uniform buffers, immutable textures, occlusion query)
 
 All examples are implemented in a single HTML file with minimal use of functions, modules, classes or other abstractions. The goal is to allow the reader to easily see, in sequential order, all GL calls that are made.
 
